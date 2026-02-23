@@ -1,18 +1,17 @@
+let currentUser = JSON.parse(localStorage.getItem("vel_currentUser"));
+let usersList = JSON.parse(localStorage.getItem("vel_users")) || [];
+
 const State = {
-  tasks: JSON.parse(localStorage.getItem("vel_tasks")) || [],
-  projects: JSON.parse(localStorage.getItem("vel_projects")) || [],
-  finance: JSON.parse(localStorage.getItem("vel_finance")) || [],
-  layout: JSON.parse(localStorage.getItem("vel_layout")) || [
-    "tasks-widget",
-    "finance-widget",
-    "prod-widget",
-  ],
-  profile: JSON.parse(localStorage.getItem("vel_profile")) || {
+  tasks: [],
+  projects: [],
+  finance: [],
+  layout: ["tasks-widget", "finance-widget", "prod-widget"],
+  profile: {
     name: "Adnan",
     email: "adnan@velora.io",
-    bio: "Product Designer & Developer"
+    bio: "Product Designer & Developer",
   },
-  preferences: JSON.parse(localStorage.getItem("vel_prefs")) || {
+  preferences: {
     theme: window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light",
@@ -21,19 +20,50 @@ const State = {
     sidebarCollapsed: false,
     emailAlerts: true,
     fontSize: "medium",
-    defaultView: "dashboard"
+    defaultView: "dashboard",
+    language: "en",
+    showGreeting: true,
+    enableChartAnim: true,
+    highContrast: false,
+    reducedMotion: false,
   },
-  timeline: JSON.parse(localStorage.getItem("vel_timeline")) || [],
+  timeline: [],
 };
 
+function initUserState() {
+  if (!currentUser) return;
+  let u = usersList.find((x) => x.email === currentUser.email);
+  if (u) {
+    State.tasks = u.tasks || [];
+    State.projects = u.projects || [];
+    State.finance = u.finance || [];
+    State.layout = u.layout || State.layout;
+    State.profile = u.profile || {
+      name: u.name,
+      email: u.email,
+      bio: u.bio || "",
+    };
+    State.preferences = u.preferences || State.preferences;
+    State.timeline = u.timeline || [];
+  }
+}
+
 function saveState() {
-  localStorage.setItem("vel_tasks", JSON.stringify(State.tasks));
-  localStorage.setItem("vel_projects", JSON.stringify(State.projects));
-  localStorage.setItem("vel_finance", JSON.stringify(State.finance));
-  localStorage.setItem("vel_layout", JSON.stringify(State.layout));
-  localStorage.setItem("vel_profile", JSON.stringify(State.profile));
-  localStorage.setItem("vel_prefs", JSON.stringify(State.preferences));
-  localStorage.setItem("vel_timeline", JSON.stringify(State.timeline));
+  if (!currentUser) return;
+  let idx = usersList.findIndex((x) => x.email === currentUser.email);
+  if (idx > -1) {
+    usersList[idx] = {
+      ...usersList[idx],
+      tasks: State.tasks,
+      projects: State.projects,
+      finance: State.finance,
+      layout: State.layout,
+      profile: State.profile,
+      preferences: State.preferences,
+      timeline: State.timeline,
+    };
+    localStorage.setItem("vel_users", JSON.stringify(usersList));
+  }
 }
 
 // Global Timeline Action Logger
@@ -60,6 +90,112 @@ function showToast(message) {
 
 // Initializer
 document.addEventListener("DOMContentLoaded", () => {
+  // --- AUTH CHECK ---
+  const authOverlay = document.getElementById("loginOverlay");
+  const mainApp = document.getElementById("mainAppContainer");
+
+  if (!currentUser) {
+    if (mainApp) mainApp.style.display = "none";
+    if (authOverlay) authOverlay.style.display = "flex";
+    document.getElementById("globalLoader").classList.remove("active");
+  } else {
+    initUserState();
+    if (authOverlay) authOverlay.style.display = "none";
+    if (mainApp) mainApp.style.display = "flex";
+  }
+
+  let authMode = "login";
+  const authForm = document.getElementById("authForm");
+  const toggleAuthModeBtn = document.getElementById("toggleAuthModeBtn");
+
+  if (toggleAuthModeBtn) {
+    toggleAuthModeBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      authMode = authMode === "login" ? "signup" : "login";
+      document.getElementById("authTitle").innerText =
+        authMode === "login" ? "Welcome back" : "Create Account";
+      document.getElementById("authSubtitle").innerText =
+        authMode === "login"
+          ? "Sign in to your workspace."
+          : "Join Velora and setup your workspace.";
+      document.getElementById("authNameGroup").style.display =
+        authMode === "login" ? "none" : "block";
+      document.getElementById("authSubmitBtn").innerText =
+        authMode === "login" ? "Secure Sign In" : "Create Account";
+      document.getElementById("authToggleText").innerText =
+        authMode === "login" ? "No account?" : "Already have an account?";
+      toggleAuthModeBtn.innerText =
+        authMode === "login" ? "Create new account" : "Sign in instead";
+      document.getElementById("authErrorMsg").style.display = "none";
+    });
+  }
+
+  if (authForm) {
+    authForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("authEmail").value.trim();
+      const password = document.getElementById("authPassword").value.trim();
+      const name = document.getElementById("authName").value.trim();
+      const errorEl = document.getElementById("authErrorMsg");
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        errorEl.innerText = "Please enter a valid email address.";
+        errorEl.style.display = "block";
+        return;
+      }
+
+      const passRegex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_+=-])[A-Za-z\d!@#$%^&*(),.?":{}|<>_+=-]{8,}$/;
+      if (!passRegex.test(password)) {
+        errorEl.innerText =
+          "Password must be min 8 chars with uppercase, lowercase, number, and special character.";
+        errorEl.style.display = "block";
+        return;
+      }
+
+      if (authMode === "signup") {
+        let existingUser = usersList.find((u) => u.email === email);
+        if (existingUser) {
+          errorEl.innerText = "Account with this email already exists.";
+          errorEl.style.display = "block";
+          return;
+        }
+        let newUser = {
+          email: email,
+          password: password,
+          name: name || "New User",
+        };
+        usersList.push(newUser);
+        localStorage.setItem("vel_users", JSON.stringify(usersList));
+        localStorage.setItem(
+          "vel_currentUser",
+          JSON.stringify({ email: email, name: name || "New User" }),
+        );
+        window.location.reload();
+      } else {
+        let existingUser = usersList.find(
+          (u) => u.email === email && u.password === password,
+        );
+        if (!existingUser) {
+          errorEl.innerText = "Invalid credentials. Please try again.";
+          errorEl.style.display = "block";
+          return;
+        }
+        localStorage.setItem(
+          "vel_currentUser",
+          JSON.stringify({
+            email: existingUser.email,
+            name: existingUser.name,
+          }),
+        );
+        window.location.reload();
+      }
+    });
+  }
+
+  if (!currentUser) return; // STOP initialization if not logged in
+
   // 1. Initial State Load Settings
   applyTheme(State.preferences.theme);
   applyAccent(State.preferences.accent);
@@ -67,15 +203,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("profName").value = State.profile.name;
   document.getElementById("profEmail").value = State.profile.email;
-  document.getElementById("profBio").value = State.profile.bio || "Build things.";
+  document.getElementById("profBio").value =
+    State.profile.bio || "Build things.";
   updateTopNavProfile();
   setGreetingMsg();
 
   // 2. Remove Loader & Load Default View
   setTimeout(() => {
     document.getElementById("globalLoader").classList.remove("active");
-    if(State.preferences.defaultView && State.preferences.defaultView !== "dashboard") {
-       switchView("view-" + State.preferences.defaultView);
+    if (
+      State.preferences.defaultView &&
+      State.preferences.defaultView !== "dashboard"
+    ) {
+      switchView("view-" + State.preferences.defaultView);
     }
     renderAll();
     showToast("Velora successfully loaded.");
@@ -115,6 +255,11 @@ document.addEventListener("DOMContentLoaded", () => {
       else v.classList.remove("active");
     });
     renderAll(); // refresh
+  }
+
+  const mainLogo = document.getElementById("mainLogo");
+  if (mainLogo) {
+    mainLogo.addEventListener("click", () => switchView("view-dashboard"));
   }
 
   navItems.forEach((item) => {
@@ -197,7 +342,10 @@ document.addEventListener("DOMContentLoaded", () => {
     showToast("Data exported successfully!");
   });
 
-  // Dashboard New Task
+  // Dashboard New Task & Quick Settings
+  document
+    .getElementById("fabSettings")
+    .addEventListener("click", () => switchView("view-settings"));
   document
     .getElementById("openTaskModalBtn")
     .addEventListener("click", () => openTaskModal());
@@ -421,8 +569,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("saveThemeBtn").addEventListener("click", () => {
-    const isDark = document.getElementById("themeRadioDark").checked;
-    const mode = isDark ? "dark" : "light";
+    let mode = "light";
+    if (document.getElementById("themeRadioDark").checked) mode = "dark";
+    if (
+      document.getElementById("themeRadioSystem") &&
+      document.getElementById("themeRadioSystem").checked
+    )
+      mode = "system";
 
     const activeSwatch = document.querySelector(".color-swatch.active");
     const accentVal = activeSwatch
@@ -431,6 +584,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const fontSize = document.getElementById("fontSizeSelect").value;
     State.preferences.fontSize = fontSize;
+
+    const densityVal =
+      document.querySelector('input[name="uiDensity"]:checked')?.value ||
+      "default";
+    State.preferences.uiDensity = densityVal;
 
     applyTheme(mode);
     applyAccent(accentVal);
@@ -442,6 +600,36 @@ document.addEventListener("DOMContentLoaded", () => {
     logActivity(`Switched app theme to ${mode} mode with new accent.`);
     showToast("Appearance settings updated.");
   });
+
+  // Security - Logout
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (confirm("Are you sure you want to log out?")) {
+        localStorage.removeItem("vel_currentUser");
+        window.location.reload();
+      }
+    });
+  }
+
+  const logoutAllBtn = document.getElementById("logoutAllBtn");
+  if (logoutAllBtn) {
+    logoutAllBtn.addEventListener("click", () => {
+      if (confirm("Log out of all other active sessions?")) {
+        showToast("Logged out of all other devices successfully.");
+        logActivity("Terminated all active sessions.");
+      }
+    });
+  }
+
+  const testPushBtn = document.getElementById("testPushBtn");
+  if (testPushBtn) {
+    testPushBtn.addEventListener("click", () => {
+      showToast("🔔 Push Notification Test Sent!");
+      logActivity("Tested push notifications.");
+    });
+  }
 
   // PREFERENCE TOGGLES
   document
@@ -460,39 +648,121 @@ document.addEventListener("DOMContentLoaded", () => {
       saveState();
     });
 
+  const contrastNode = document.getElementById("contrastToggle");
+  if (contrastNode) {
+    contrastNode.addEventListener("change", (e) => {
+      State.preferences.highContrast = e.target.checked;
+      applyPreferences();
+      saveState();
+      showToast("Contrast preference updated!");
+    });
+  }
+
+  const motionNode = document.getElementById("motionToggle");
+  if (motionNode) {
+    motionNode.addEventListener("change", (e) => {
+      State.preferences.reducedMotion = e.target.checked;
+      applyPreferences();
+      saveState();
+      showToast("Motion preference updated!");
+    });
+  }
+
+  const langNode = document.getElementById("languageSelect");
+  if (langNode) {
+    langNode.addEventListener("change", (e) => {
+      State.preferences.language = e.target.value;
+      saveState();
+      logActivity(`Changed language to ${e.target.value.toUpperCase()}`);
+      showToast("Language changed successfully!");
+    });
+  }
+
+  const greetNode = document.getElementById("greetingToggle");
+  if (greetNode) {
+    greetNode.addEventListener("change", (e) => {
+      State.preferences.showGreeting = e.target.checked;
+      saveState();
+      setGreetingMsg();
+      showToast("Greeting preference updated!");
+    });
+  }
+
+  const chartAnimNode = document.getElementById("chartAnimToggle");
+  if (chartAnimNode) {
+    chartAnimNode.addEventListener("change", (e) => {
+      State.preferences.enableChartAnim = e.target.checked;
+      saveState();
+      showToast("Chart animation preference set!");
+    });
+  }
+
   const defaultViewNode = document.getElementById("defaultViewSelect");
   if (defaultViewNode) {
-     defaultViewNode.value = State.preferences.defaultView || "dashboard";
-     defaultViewNode.addEventListener("change", (e) => {
-        State.preferences.defaultView = e.target.value;
-        saveState();
-        logActivity(`Set default landing page to ${e.target.value}`);
-        showToast("Default view updated");
-     });
+    defaultViewNode.value = State.preferences.defaultView || "dashboard";
+    defaultViewNode.addEventListener("change", (e) => {
+      State.preferences.defaultView = e.target.value;
+      saveState();
+      logActivity(`Set default landing page to ${e.target.value}`);
+      showToast("Default view updated");
+    });
+  }
+
+  const savePrefsBtn = document.getElementById("savePrefsBtn");
+  if (savePrefsBtn) {
+    savePrefsBtn.addEventListener("click", () => {
+      saveState();
+      showToast("Workflow preferences saved successfully!");
+      logActivity("Saved custom workflow preferences.");
+    });
   }
 
   const exportBtn = document.getElementById("exportPrefsBtn");
   if (exportBtn) {
-     exportBtn.addEventListener("click", () => {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(State.preferences, null, 2));
-        const dlAnchorElem = document.createElement("a");
-        dlAnchorElem.setAttribute("href", dataStr);
-        dlAnchorElem.setAttribute("download", "velora_preferences.json");
-        dlAnchorElem.click();
-        logActivity("Exported preferences JSON");
-        showToast("Settings exported successfully!");
-     });
+    exportBtn.addEventListener("click", () => {
+      const dataStr =
+        "data:text/json;charset=utf-8," +
+        encodeURIComponent(
+          JSON.stringify(
+            {
+              preferences: State.preferences,
+              profile: State.profile,
+            },
+            null,
+            2,
+          ),
+        );
+      const dlAnchorElem = document.createElement("a");
+      dlAnchorElem.setAttribute("href", dataStr);
+      dlAnchorElem.setAttribute("download", "velora_settings.json");
+      dlAnchorElem.click();
+      logActivity("Exported settings JSON");
+      showToast("Settings exported successfully!");
+    });
   }
 
   const resetBtn = document.getElementById("resetPrefsBtn");
   if (resetBtn) {
-     resetBtn.addEventListener("click", () => {
-        if(confirm("Are you sure you want to reset all preferences to default?")) {
-           localStorage.removeItem("vel_prefs");
-           showToast("Resetting in 2 seconds...");
-           setTimeout(() => window.location.reload(), 2000);
-        }
-     });
+    resetBtn.addEventListener("click", () => {
+      if (
+        confirm(
+          "Are you sure you want to revert all settings to factory defaults?",
+        )
+      ) {
+        State.preferences = {
+          theme: "light",
+          accent: "#f59b01",
+          fontSize: "medium",
+          defaultView: "dashboard",
+          language: "en",
+          showGreeting: true,
+          enableChartAnim: true,
+        };
+        saveState();
+        showToast("System reset initiated...");
+        setTimeout(() => window.location.reload(), 1500);
+      }
+    });
   }
 
   // 8. Settings Navigation Tab Switching
@@ -611,6 +881,17 @@ function applyTheme(mode) {
   if (mode === "dark") {
     document.documentElement.setAttribute("data-theme", "dark");
     document.getElementById("themeRadioDark").checked = true;
+  } else if (mode === "system") {
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+    const radioSys = document.getElementById("themeRadioSystem");
+    if (radioSys) radioSys.checked = true;
   } else {
     document.documentElement.removeAttribute("data-theme");
     document.getElementById("themeRadioLight").checked = true;
@@ -631,12 +912,24 @@ function applyAccent(color) {
 
 function applyPreferences() {
   const html = document.documentElement;
-  
+
   if (State.preferences.fontSize) {
-    document.getElementById("fontSizeSelect").value = State.preferences.fontSize;
-    if(State.preferences.fontSize === 'small') document.body.style.fontSize = "13px";
-    else if(State.preferences.fontSize === 'large') document.body.style.fontSize = "16px";
+    const fsSelect = document.getElementById("fontSizeSelect");
+    if (fsSelect) fsSelect.value = State.preferences.fontSize;
+    if (State.preferences.fontSize === "small")
+      document.body.style.fontSize = "13px";
+    else if (State.preferences.fontSize === "large")
+      document.body.style.fontSize = "16px";
     else document.body.style.fontSize = "";
+  }
+
+  // Handle UI Density
+  if (State.preferences.uiDensity) {
+    html.setAttribute("data-density", State.preferences.uiDensity);
+    const densityRadio = document.getElementById(
+      `densityRadio${State.preferences.uiDensity.charAt(0).toUpperCase() + State.preferences.uiDensity.slice(1)}`,
+    );
+    if (densityRadio) densityRadio.checked = true;
   }
 
   if (State.preferences.compactMode) {
@@ -654,6 +947,30 @@ function applyPreferences() {
     html.removeAttribute("data-sidebar");
     document.getElementById("sidebarCollapseToggle").checked = false;
   }
+
+  // Accessibility & Prefs Values Binding
+  if (State.preferences.highContrast) {
+    html.setAttribute("data-contrast", "high");
+    document.getElementById("contrastToggle").checked = true;
+  } else {
+    html.removeAttribute("data-contrast");
+    document.getElementById("contrastToggle").checked = false;
+  }
+
+  if (State.preferences.reducedMotion) {
+    html.setAttribute("data-motion", "reduced");
+    document.getElementById("motionToggle").checked = true;
+  } else {
+    html.removeAttribute("data-motion");
+    document.getElementById("motionToggle").checked = false;
+  }
+
+  document.getElementById("languageSelect").value =
+    State.preferences.language || "en";
+  document.getElementById("greetingToggle").checked =
+    State.preferences.showGreeting !== false;
+  document.getElementById("chartAnimToggle").checked =
+    State.preferences.enableChartAnim !== false;
 }
 
 function updateTopNavProfile() {
@@ -669,12 +986,22 @@ function updateTopNavProfile() {
 }
 
 function setGreetingMsg() {
+  const greetingEl = document.getElementById("greetingMsg");
+  if (!greetingEl) return;
+
+  if (State.preferences.showGreeting === false) {
+    greetingEl.innerText = "";
+    greetingEl.style.display = "none";
+    return;
+  } else {
+    greetingEl.style.display = "block";
+  }
+
   const hour = new Date().getHours();
   let msg = "Good Evening";
   if (hour < 12) msg = "Good Morning";
   else if (hour < 18) msg = "Good Afternoon";
-  document.getElementById("greetingMsg").innerText =
-    `${msg}, ${State.profile.name.split(" ")[0]}`;
+  greetingEl.innerText = `${msg}, ${State.profile.name.split(" ")[0]}`;
 }
 
 // RENDER FUNCTIONS

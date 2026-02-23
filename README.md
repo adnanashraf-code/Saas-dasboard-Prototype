@@ -14,6 +14,7 @@ A modern, high-end SaaS dashboard interface inspired by Linear and Notion design
 ## 🧱 Key Widgets Included
 
 The dashboard contains the foundational modules expected in modern project and productivity software:
+
 1. **Sidebar Navigation & Top Nav:** A fixed workspace sidebar along with a rich top navigation bar (Search, Theme Toggle, Notifications, Profile).
 2. **Key Metric Cards:** Quick overviews of Monthly Revenue, Active Users, and Task Completion showing trend deltas.
 3. **Tasks Management:** A custom functional-looking task list with priority chips, custom styled checkboxes, and deadline indicators.
@@ -29,4 +30,5 @@ Since the application uses pure web technologies without needing a build step:
 3. Switch between dark and light themes using the moon/sun icon in the top right.
 
 ---
-*Crafted for developers looking for premium boilerplate dashboard UI.*
+
+_Crafted for developers looking for premium boilerplate dashboard UI._

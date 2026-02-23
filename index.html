@@ -1,0 +1,2084 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Veloria | Interactive Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="shortcut icon" href="velora.jpg" type="image/x-icon">
+  </head>
+  <body>
+    <!-- Global Loader -->
+    <div id="globalLoader" class="loader-overlay active">
+      <!-- Skeleton simulation -->
+      <div class="spinner amber-grad"></div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="app-container">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div
+          class="sidebar-header"
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <div class="logo">
+            <img
+              src="velora.jpg"
+              alt="Logo"
+              class="logo-icon"
+              style="
+                width: 32px;
+                height: 32px;
+                border-radius: 10px;
+                object-fit: cover;
+              "
+            />
+            <span class="logo-text">Velora</span>
+          </div>
+          <button
+            id="sidebarCollapseBtn"
+            class="icon-btn text-muted"
+            style="
+              background: none;
+              border: none;
+              cursor: pointer;
+              display: none;
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-section">
+            <h3 class="nav-section-title">Workspace</h3>
+            <a href="#" class="nav-item active" data-target="view-dashboard">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <rect x="7" y="7" width="3" height="9"></rect>
+                <rect x="14" y="7" width="3" height="5"></rect>
+              </svg>
+              <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-projects">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                ></path>
+              </svg>
+              <span class="nav-label">Projects</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-tasks">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span class="nav-label">Tasks</span>
+            </a>
+          </div>
+
+          <div class="nav-section">
+            <h3 class="nav-section-title">Insights</h3>
+            <a href="#" class="nav-item" data-target="view-finance">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path
+                  d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                ></path>
+              </svg>
+              <span class="nav-label">Finance Analytics</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-team">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span class="nav-label">Team</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-calendar">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span class="nav-label">Calendar</span>
+            </a>
+          </div>
+        </nav>
+
+        <div class="sidebar-footer">
+          <a
+            href="#"
+            class="nav-item"
+            data-target="view-settings"
+            id="sidebarSettingsLink"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+              ></path>
+            </svg>
+            <span class="nav-label">Settings</span>
+          </a>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Top Navigation -->
+        <header class="top-nav">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <button
+              id="mobileMenuBtn"
+              class="icon-btn text-muted"
+              style="
+                background: none;
+                border: none;
+                cursor: pointer;
+                display: none;
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+            <div
+              class="search-bar"
+              id="openCommandPaletteBtn"
+              style="cursor: pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <div
+                style="
+                  flex: 1;
+                  color: var(--text-muted);
+                  font-size: 14px;
+                  user-select: none;
+                "
+                class="nav-label"
+              >
+                Search resources, tasks...
+              </div>
+              <kbd
+                style="
+                  font-size: 11px;
+                  background: var(--bg-card);
+                  border: 1px solid var(--border-subtle);
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                  color: var(--text-muted);
+                "
+                class="nav-label"
+                >Ctrl K</kbd
+              >
+            </div>
+          </div>
+
+          <div class="top-nav-actions">
+            <div
+              id="realTimeClock"
+              class="real-time-clock text-muted"
+              style="
+                font-weight: 500;
+                font-size: 13px;
+                letter-spacing: 0.5px;
+                border: 1px solid var(--border-subtle);
+                padding: 6px 12px;
+                border-radius: 16px;
+              "
+            >
+              00:00 AM
+            </div>
+
+            <button
+              class="nav-action-btn"
+              id="quickThemeToggle"
+              title="Toggle Theme"
+            >
+              <svg
+                id="themeIconSun"
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="display: block"
+              >
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+              <svg
+                id="themeIconMoon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="display: none"
+              >
+                <path
+                  d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                ></path>
+              </svg>
+            </button>
+
+            <div class="dropdown-wrapper">
+              <button class="nav-action-btn notify-btn" id="notifyBtn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="notify-badge" id="notifBadge"></span>
+              </button>
+              <div class="dropdown-menu" id="notifyDropdown">
+                <div class="dropdown-header">
+                  <h4>Notifications</h4>
+                  <button
+                    class="text-btn outline-btn"
+                    id="markReadBtn"
+                    style="
+                      border: none;
+                      background: none;
+                      padding: 0;
+                      cursor: pointer;
+                    "
+                  >
+                    Mark all read
+                  </button>
+                </div>
+                <div class="dropdown-body" id="notificationList">
+                  <div class="notif-item unread">
+                    <div class="notif-dot"></div>
+                    <div class="notif-content">
+                      <p><b>System</b> Velora successfully loaded.</p>
+                      <span>Just now</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropdown-wrapper">
+              <div class="profile-dropdown" id="profileBtn">
+                <div class="avatar" id="topNavAvatar">
+                  <img
+                    src="https://ui-avatars.com/api/?name=Adnan&background=f59b01&color=fff"
+                    alt="User"
+                    style="width: 100%; height: 100%"
+                  />
+                </div>
+                <svg
+                  class="chevron"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+              <div
+                class="dropdown-menu profile-menu"
+                id="profileDropdown"
+                style="right: 0"
+              >
+                <div class="dropdown-header">
+                  <div>
+                    <p
+                      class="menu-name"
+                      id="topNavProfileName"
+                      style="font-weight: 600; font-size: 14px"
+                    >
+                      Adnan
+                    </p>
+                    <p
+                      class="menu-email"
+                      id="topNavProfileEmail"
+                      style="font-size: 12px; color: var(--text-muted)"
+                    >
+                      adnan@velora.io
+                    </p>
+                  </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="menu-item-link" id="settingsMenuLink"
+                  >Settings & Profile</a
+                >
+                <div class="dropdown-divider"></div>
+                <a
+                  href="auth.html"
+                  class="menu-item-link text-danger"
+                  id="logoutBtn"
+                  >Log out</a
+                >
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- VIEWS CONTAINER -->
+        <div class="views-container">
+          <!-- DASHBOARD VIEW -->
+          <div id="view-dashboard" class="view-section active">
+            <div class="page-header">
+              <div>
+                <h1 id="greetingMsg">Good Morning, Adnan</h1>
+                <p class="subtitle">
+                  Here's your dashboard overview. Rearrange widgets as needed.
+                </p>
+              </div>
+              <div style="display: flex; gap: 12px">
+                <button
+                  class="outline-btn text-btn"
+                  id="exportDataBtn"
+                  style="
+                    border: 1px solid var(--border-subtle);
+                    padding: 8px 12px;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    background: var(--bg-app);
+                    color: var(--text-main);
+                  "
+                >
+                  Export Data (JSON)
+                </button>
+                <button class="primary-btn" id="openTaskModalBtn">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  <span class="nav-label">New Task</span>
+                  <kbd
+                    style="
+                      margin-left: 8px;
+                      font-size: 10px;
+                      background: rgba(255, 255, 255, 0.2);
+                      padding: 2px 4px;
+                      border-radius: 4px;
+                    "
+                    >Ctrl+N</kbd
+                  >
+                </button>
+              </div>
+            </div>
+
+            <!-- Metrics -->
+            <section class="metrics-grid">
+              <div class="metric-card clickable-card" data-metric="revenue">
+                <div class="metric-header">
+                  <span class="metric-title">Monthly Revenue</span>
+                  <div class="metric-icon amber-grad">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="12" y1="1" x2="12" y2="23"></line>
+                      <path
+                        d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="metric-value" id="dashRevValue">$0</div>
+                <div class="metric-change positive">Tracked via Finance</div>
+              </div>
+
+              <div class="metric-card clickable-card" data-metric="projects">
+                <div class="metric-header">
+                  <span class="metric-title">Active Projects</span>
+                  <div class="metric-icon cream-grad" style="color: #000">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="metric-value" id="dashProjCount">0</div>
+                <div class="metric-change positive">In progress</div>
+              </div>
+
+              <div class="metric-card clickable-card" data-metric="tasks">
+                <div class="metric-header">
+                  <span class="metric-title">Task Completion</span>
+                  <div class="metric-icon dark-grad">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="9 11 12 14 22 4"></polyline>
+                      <path
+                        d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="metric-value" id="dashTaskComp">0%</div>
+                <div class="metric-change positive">Tracked in real-time</div>
+              </div>
+            </section>
+
+            <!-- Widgets Layout (Draggable Area) -->
+            <section class="widgets-layout" id="dashboardWidgetsArea">
+              <div class="widget draggable" id="tasks-widget" draggable="true">
+                <div class="widget-header">
+                  <h2>Daily Tasks</h2>
+                  <button
+                    class="animated-add-btn"
+                    id="widgetAddTaskBtn"
+                    title="Add Task"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                </div>
+                <div class="tasks-list" id="dashTaskList"></div>
+                <div
+                  class="empty-state"
+                  id="dashTaskEmpty"
+                  style="display: none"
+                >
+                  <p>No tasks yet. Create one!</p>
+                </div>
+                <div class="task-progress">
+                  <div class="progress-info">
+                    <span>Overall Progress</span
+                    ><span id="dashTaskProgText">0%</span>
+                  </div>
+                  <div class="progress-bar-container">
+                    <div
+                      class="progress-bar"
+                      id="dashTaskProgBar"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="widget draggable"
+                id="finance-widget"
+                draggable="true"
+              >
+                <div class="widget-header">
+                  <h2>Finance Overview</h2>
+                  <button
+                    class="animated-add-btn"
+                    id="openAddTxBtn"
+                    title="Add Transaction"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                </div>
+                <div class="finance-summary">
+                  <div class="finance-block">
+                    <span class="finance-label">Income</span>
+                    <span class="finance-value positive" id="dashIncome"
+                      >+$0</span
+                    >
+                  </div>
+                  <div class="finance-divider"></div>
+                  <div class="finance-block">
+                    <span class="finance-label">Expenses</span>
+                    <span class="finance-value negative" id="dashExpense"
+                      >-$0</span
+                    >
+                  </div>
+                </div>
+                <div class="transactions-list" id="dashTxList"></div>
+              </div>
+
+              <div
+                class="widget draggable productivity-widget"
+                id="prod-widget"
+                draggable="true"
+              >
+                <div class="widget-header">
+                  <h2>Productivity Insights</h2>
+                </div>
+                <div class="prod-score">
+                  <div class="score-circle">
+                    <svg viewBox="0 0 36 36" class="circular-chart orange">
+                      <path
+                        class="circle-bg"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                      <path
+                        class="circle"
+                        id="prodSvgCircle"
+                        stroke-dasharray="0, 100"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                      <text
+                        x="18"
+                        y="20.35"
+                        class="percentage"
+                        id="prodPercentageText"
+                      >
+                        0
+                      </text>
+                    </svg>
+                  </div>
+                  <div class="score-details">
+                    <h3 id="prodTitle">Score Updates Live</h3>
+                    <p id="prodDesc">Complete tasks to increase score.</p>
+                  </div>
+                </div>
+
+                <div
+                  class="widget-header"
+                  style="margin-top: 24px; margin-bottom: 12px"
+                >
+                  <h2>Activity Timeline</h2>
+                </div>
+                <div
+                  class="activity-timeline"
+                  id="dashTimeline"
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    max-height: 150px;
+                    overflow-y: auto;
+                    font-size: 13px;
+                    color: var(--text-muted);
+                    border-left: 2px solid var(--border-subtle);
+                    padding-left: 12px;
+                  "
+                >
+                  <!-- Filled via JS -->
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- PROJECTS VIEW -->
+          <div id="view-projects" class="view-section">
+            <div class="page-header">
+              <div>
+                <h1>Projects Workspace</h1>
+                <p class="subtitle">
+                  Manage large-scale workflows and deadlines.
+                </p>
+              </div>
+              <div style="display: flex; gap: 12px">
+                <select
+                  id="projectFilter"
+                  style="
+                    padding: 8px;
+                    border-radius: 6px;
+                    background: var(--bg-card);
+                    color: var(--text-main);
+                    border: 1px solid var(--border-subtle);
+                  "
+                >
+                  <option value="all">All Projects</option>
+                  <option value="active">Active</option>
+                  <option value="completed">Completed</option>
+                </select>
+                <button class="primary-btn" id="openProjectModalBtn">
+                  New Project
+                </button>
+              </div>
+            </div>
+            <div class="empty-state" id="projectsEmptyState">
+              No projects found. Create one.
+            </div>
+            <div
+              class="widgets-layout"
+              id="projectsList"
+              style="
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+              "
+            ></div>
+          </div>
+
+          <!-- TASKS VIEW -->
+          <div id="view-tasks" class="view-section">
+            <div class="page-header">
+              <div>
+                <h1>Tasks Manager</h1>
+                <p class="subtitle">
+                  Drag to reorder. Advanced task list with priorities.
+                </p>
+              </div>
+              <div style="display: flex; gap: 12px">
+                <select
+                  id="taskFilter"
+                  style="
+                    padding: 8px;
+                    border-radius: 6px;
+                    background: var(--bg-card);
+                    color: var(--text-main);
+                    border: 1px solid var(--border-subtle);
+                  "
+                >
+                  <option value="all">All Status</option>
+                  <option value="pending">Pending</option>
+                  <option value="completed">Completed</option>
+                </select>
+                <button class="primary-btn goToAddTaskBtn">New Task</button>
+              </div>
+            </div>
+            <div class="widget" style="margin-bottom: 24px">
+              <div class="empty-state" id="fullTasksEmpty">
+                No tasks available.
+              </div>
+              <!-- Droppable area for task reordering -->
+              <div
+                class="tasks-list"
+                id="fullTasksList"
+                style="min-height: 200px"
+              ></div>
+            </div>
+          </div>
+
+          <!-- FINANCE VIEW -->
+          <div id="view-finance" class="view-section">
+            <div class="page-header">
+              <div>
+                <h1>Finance Analytics</h1>
+                <p class="subtitle">
+                  Track budgets, subscriptions, and transactions.
+                </p>
+              </div>
+              <button class="primary-btn" id="openAddTxBtn2">
+                Add Transaction
+              </button>
+            </div>
+
+            <div
+              class="widgets-layout"
+              style="margin-bottom: 24px; grid-template-columns: repeat(2, 1fr)"
+            >
+              <div
+                class="finance-summary widget"
+                style="
+                  margin-bottom: 0;
+                  flex-direction: column;
+                  align-items: stretch;
+                "
+              >
+                <h3
+                  style="margin-bottom: 16px; font-size: 16px; font-weight: 600"
+                >
+                  Monthly Summary
+                </h3>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 12px;
+                  "
+                >
+                  <div class="finance-block">
+                    <span class="finance-label">Income</span
+                    ><span class="finance-value positive" id="finVoltInc"
+                      >+$0</span
+                    >
+                  </div>
+                  <div class="finance-block">
+                    <span class="finance-label">Expense</span
+                    ><span class="finance-value negative" id="finVoltExp"
+                      >-$0</span
+                    >
+                  </div>
+                  <div class="finance-block">
+                    <span class="finance-label">Net Profit</span
+                    ><span
+                      class="finance-value"
+                      id="finVoltNet"
+                      style="color: var(--c-amber)"
+                      >$0</span
+                    >
+                  </div>
+                </div>
+                <!-- Budget Limit Warning -->
+                <div
+                  id="budgetWarning"
+                  style="
+                    padding: 12px;
+                    border-radius: 6px;
+                    background: rgba(239, 68, 68, 0.1);
+                    color: #ef4444;
+                    font-size: 13px;
+                    font-weight: 600;
+                    display: none;
+                    margin-top: 12px;
+                  "
+                >
+                  Warning: Expenses exceeding budget thresholds.
+                </div>
+              </div>
+
+              <div class="widget" style="display: flex; flex-direction: column">
+                <h3
+                  style="margin-bottom: 16px; font-size: 16px; font-weight: 600"
+                >
+                  Net Profit Analytics
+                </h3>
+                <div
+                  class="chart-container"
+                  style="
+                    flex: 1;
+                    display: flex;
+                    align-items: flex-end;
+                    gap: 12px;
+                    padding-top: 20px;
+                    justify-content: space-between;
+                    border-bottom: 1px solid var(--border-subtle);
+                    padding-bottom: 12px;
+                  "
+                >
+                  <!-- Pure CSS Bar Chart populated by JS -->
+                  <div
+                    class="chart-bar"
+                    style="
+                      height: 40%;
+                      background: var(--c-amber);
+                      width: 100%;
+                      border-radius: 4px 4px 0 0;
+                    "
+                    title="Jan"
+                  ></div>
+                  <div
+                    class="chart-bar"
+                    style="
+                      height: 60%;
+                      background: var(--c-amber);
+                      width: 100%;
+                      border-radius: 4px 4px 0 0;
+                    "
+                    title="Feb"
+                  ></div>
+                  <div
+                    class="chart-bar"
+                    style="
+                      height: 30%;
+                      background: var(--c-amber);
+                      width: 100%;
+                      border-radius: 4px 4px 0 0;
+                    "
+                    title="Mar"
+                  ></div>
+                  <div
+                    class="chart-bar"
+                    style="
+                      height: 80%;
+                      background: var(--c-amber);
+                      width: 100%;
+                      border-radius: 4px 4px 0 0;
+                    "
+                    title="Apr"
+                  ></div>
+                  <div
+                    class="chart-bar"
+                    style="
+                      height: 50%;
+                      background: var(--text-muted);
+                      width: 100%;
+                      border-radius: 4px 4px 0 0;
+                    "
+                    title="May (Expense)"
+                  ></div>
+                  <div
+                    class="chart-bar"
+                    style="
+                      height: 90%;
+                      background: var(--c-amber);
+                      width: 100%;
+                      border-radius: 4px 4px 0 0;
+                    "
+                    title="Jun"
+                  ></div>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 8px;
+                    font-size: 11px;
+                    color: var(--text-muted);
+                  "
+                >
+                  <span>Jan</span><span>Feb</span><span>Mar</span
+                  ><span>Apr</span><span>May</span><span>Jun</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="widget">
+              <h3 style="margin-bottom: 16px">Transaction History</h3>
+              <div class="empty-state" id="fullTxEmpty">
+                No transactions yet.
+              </div>
+              <div class="transactions-list" id="fullTxList"></div>
+            </div>
+          </div>
+
+          <!-- CALENDAR VIEW -->
+          <div id="view-calendar" class="view-section">
+            <div
+              class="page-header"
+              style="
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <div>
+                <h1>Calendar</h1>
+                <p class="subtitle">
+                  Plan your weeks. Click a day to add a task.
+                </p>
+              </div>
+              <div
+                class="cal-actions"
+                style="display: flex; gap: 12px; align-items: center"
+              >
+                <select
+                  id="calMonthSelect"
+                  style="
+                    padding: 6px;
+                    border-radius: 6px;
+                    background: var(--bg-card);
+                    color: var(--text-main);
+                    border: 1px solid var(--border-subtle);
+                  "
+                >
+                  <option value="0">January</option>
+                  <option value="1">February</option>
+                  <option value="2">March</option>
+                  <option value="3">April</option>
+                  <option value="4">May</option>
+                  <option value="5">June</option>
+                  <option value="6">July</option>
+                  <option value="7">August</option>
+                  <option value="8">September</option>
+                  <option value="9">October</option>
+                  <option value="10">November</option>
+                  <option value="11">December</option>
+                </select>
+                <select
+                  id="calYearSelect"
+                  style="
+                    padding: 6px;
+                    border-radius: 6px;
+                    background: var(--bg-card);
+                    color: var(--text-main);
+                    border: 1px solid var(--border-subtle);
+                  "
+                ></select>
+              </div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+
+          <!-- TEAM VIEW -->
+          <div id="view-team" class="view-section">
+            <div class="page-header">
+              <div>
+                <h1>Teams & Reports</h1>
+                <p class="subtitle">
+                  Manage squads. Click a card to view workflow.
+                </p>
+              </div>
+              <button class="primary-btn" id="openInviteBtn">
+                Invite Member
+              </button>
+            </div>
+            <div class="teams-grid">
+              <div class="team-card actionable-team" data-team="Engineering">
+                <div class="team-card-header">
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <img
+                      src="https://ui-avatars.com/api/?name=EN&background=000&color=fff"
+                      style="width: 24px; border-radius: 4px"
+                    />
+                    <h3>Engineering</h3>
+                  </div>
+                  <span class="badge">12 Members</span>
+                </div>
+                <p class="team-desc">
+                  Core architecture and feature development.
+                </p>
+              </div>
+              <div class="team-card actionable-team" data-team="Design">
+                <div class="team-card-header">
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <img
+                      src="https://ui-avatars.com/api/?name=DE&background=f59b01&color=fff"
+                      style="width: 24px; border-radius: 4px"
+                    />
+                    <h3>Design</h3>
+                  </div>
+                  <span class="badge" style="background: var(--text-main)"
+                    >4 Members</span
+                  >
+                </div>
+                <p class="team-desc">UI/UX and brand design strategy.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SETTINGS VIEW -->
+          <div id="view-settings" class="view-section">
+            <div class="page-header">
+              <div>
+                <h1>Settings & Preferences</h1>
+                <p class="subtitle">
+                  Manage profile, appearance, security, and app preferences.
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="settings-layout"
+              style="
+                display: grid;
+                grid-template-columns: 240px 1fr;
+                gap: 32px;
+                align-items: start;
+              "
+            >
+              <div class="settings-nav widget" style="padding: 16px">
+                <div style="display: flex; flex-direction: column; gap: 8px">
+                  <button class="settings-tab active" data-tab="set-profile">
+                    Profile
+                  </button>
+                  <button class="settings-tab" data-tab="set-appearance">
+                    Appearance
+                  </button>
+                  <button class="settings-tab" data-tab="set-notifications">
+                    Notifications
+                  </button>
+                  <button class="settings-tab" data-tab="set-security">
+                    Security
+                  </button>
+                  <button class="settings-tab" data-tab="set-preferences">
+                    Preferences
+                  </button>
+                </div>
+              </div>
+
+              <div class="settings-content widget" style="min-height: 500px">
+                <!-- Profile Set -->
+                <div id="set-profile" class="settings-panel active">
+                  <h2 style="font-size: 18px; margin-bottom: 24px">
+                    Profile Settings
+                  </h2>
+                  <form id="profileForm">
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        gap: 16px;
+                        margin-bottom: 24px;
+                      "
+                    >
+                      <img
+                        src="https://ui-avatars.com/api/?name=Adnan&background=f59b01&color=fff"
+                        style="
+                          width: 64px;
+                          height: 64px;
+                          border-radius: 50%;
+                          object-fit: cover;
+                        "
+                        id="settingsAvatarPreview"
+                      />
+                      <label
+                        class="outline-btn text-btn"
+                        style="
+                          border: 1px solid var(--border-subtle);
+                          padding: 6px 12px;
+                          border-radius: 6px;
+                          cursor: pointer;
+                          display: inline-block;
+                        "
+                      >
+                        Change Avatar
+                        <input
+                          type="file"
+                          id="avatarUpload"
+                          accept="image/*"
+                          style="display: none"
+                        />
+                      </label>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 16px">
+                      <label>Full Name</label>
+                      <input
+                        type="text"
+                        id="profName"
+                        value="Adnan"
+                        required
+                        class="form-input"
+                      />
+                    </div>
+                    <div class="form-group" style="margin-bottom: 24px">
+                      <label>Email Address</label>
+                      <input
+                        type="email"
+                        id="profEmail"
+                        value="adnan@velora.io"
+                        required
+                        class="form-input"
+                      />
+                    </div>
+                    <div class="form-group" style="margin-bottom: 24px">
+                      <label>Bio</label>
+                      <textarea
+                        id="profBio"
+                        class="form-input"
+                        style="resize: vertical; min-height: 80px;"
+                        placeholder="Tell us about yourself..."
+                      >Product Designer & Developer</textarea>
+                    </div>
+                    <button type="submit" class="primary-btn">
+                      Save Profile Updates
+                    </button>
+                  </form>
+                </div>
+
+                <!-- Appearance Set -->
+                <div
+                  id="set-appearance"
+                  class="settings-panel"
+                  style="display: none"
+                >
+                  <h2 style="font-size: 18px; margin-bottom: 24px">
+                    Appearance
+                  </h2>
+                  <div style="margin-bottom: 24px">
+                    <label
+                      style="
+                        font-weight: 600;
+                        display: block;
+                        margin-bottom: 12px;
+                      "
+                      >Theme Mode</label
+                    >
+                    <div style="display: flex; gap: 16px">
+                      <label
+                        style="
+                          cursor: pointer;
+                          display: flex;
+                          align-items: center;
+                          gap: 8px;
+                        "
+                      >
+                        <input
+                          type="radio"
+                          name="themeMode"
+                          value="light"
+                          id="themeRadioLight"
+                        />
+                        Light Mode
+                      </label>
+                      <label
+                        style="
+                          cursor: pointer;
+                          display: flex;
+                          align-items: center;
+                          gap: 8px;
+                        "
+                      >
+                        <input
+                          type="radio"
+                          name="themeMode"
+                          value="dark"
+                          id="themeRadioDark"
+                        />
+                        Dark Mode
+                      </label>
+                    </div>
+                  </div>
+
+                  <div style="margin-bottom: 24px">
+                    <label
+                      style="
+                        font-weight: 600;
+                        display: block;
+                        margin-bottom: 12px;
+                      "
+                      >Accent Color</label
+                    >
+                    <div style="display: flex; gap: 12px">
+                      <div
+                        class="color-swatch active"
+                        data-color="#f59b01"
+                        style="
+                          background: #f59b01;
+                          width: 32px;
+                          height: 32px;
+                          border-radius: 50%;
+                          cursor: pointer;
+                          border: 2px solid var(--border-strong);
+                        "
+                      ></div>
+                      <div
+                        class="color-swatch"
+                        data-color="#3b82f6"
+                        style="
+                          background: #3b82f6;
+                          width: 32px;
+                          height: 32px;
+                          border-radius: 50%;
+                          cursor: pointer;
+                          border: 2px solid transparent;
+                        "
+                      ></div>
+                      <div
+                        class="color-swatch"
+                        data-color="#10b981"
+                        style="
+                          background: #10b981;
+                          width: 32px;
+                          height: 32px;
+                          border-radius: 50%;
+                          cursor: pointer;
+                          border: 2px solid transparent;
+                        "
+                      ></div>
+                      <div
+                        class="color-swatch"
+                        data-color="#8b5cf6"
+                        style="
+                          background: #8b5cf6;
+                          width: 32px;
+                          height: 32px;
+                          border-radius: 50%;
+                          cursor: pointer;
+                          border: 2px solid transparent;
+                        "
+                      ></div>
+                      <div
+                        class="color-swatch"
+                        data-color="#ef4444"
+                        style="
+                          background: #ef4444;
+                          width: 32px;
+                          height: 32px;
+                          border-radius: 50%;
+                          cursor: pointer;
+                          border: 2px solid transparent;
+                        "
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div style="margin-bottom: 24px">
+                    <label
+                      style="
+                        font-weight: 600;
+                        display: block;
+                        margin-bottom: 12px;
+                      "
+                      >Font Size</label
+                    >
+                    <div style="display: flex; gap: 12px">
+                       <select id="fontSizeSelect" class="form-input" style="width: 200px">
+                           <option value="small">Small</option>
+                           <option value="medium" selected>Medium (Default)</option>
+                           <option value="large">Large</option>
+                       </select>
+                    </div>
+                  </div>
+
+                  <button type="button" class="primary-btn" id="saveThemeBtn">
+                    Apply Appearance
+                  </button>
+                </div>
+
+                <!-- Notifications Set -->
+                <div
+                  id="set-notifications"
+                  class="settings-panel"
+                  style="display: none"
+                >
+                  <h2 style="font-size: 18px; margin-bottom: 24px">
+                    Notifications
+                  </h2>
+                  <div style="display: flex; flex-direction: column; gap: 16px">
+                    <label
+                      class="toggle-row"
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding-bottom: 16px;
+                        border-bottom: 1px solid var(--border-subtle);
+                      "
+                    >
+                      <div>
+                        <div style="font-weight: 500">Email Notifications</div>
+                        <div style="font-size: 12px; color: var(--text-muted)">
+                          Receive daily summary emails.
+                        </div>
+                      </div>
+                      <input type="checkbox" checked class="vel-toggle" />
+                    </label>
+                    <label
+                      class="toggle-row"
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding-bottom: 16px;
+                        border-bottom: 1px solid var(--border-subtle);
+                      "
+                    >
+                      <div>
+                        <div style="font-weight: 500">Task Reminders</div>
+                        <div style="font-size: 12px; color: var(--text-muted)">
+                          Alerts when a deadline is near.
+                        </div>
+                      </div>
+                      <input type="checkbox" checked class="vel-toggle" />
+                    </label>
+                    <label
+                      class="toggle-row"
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding-bottom: 16px;
+                        border-bottom: 1px solid var(--border-subtle);
+                      "
+                    >
+                      <div>
+                        <div style="font-weight: 500">Weekly Reports</div>
+                        <div style="font-size: 12px; color: var(--text-muted)">
+                          Analytics report delivered on Monday.
+                        </div>
+                      </div>
+                      <input type="checkbox" class="vel-toggle" />
+                    </label>
+                    <label
+                      class="toggle-row"
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                      "
+                    >
+                      <div>
+                        <div style="font-weight: 500">Sound Alerts</div>
+                        <div style="font-size: 12px; color: var(--text-muted)">
+                          Play soft ping on task completion.
+                        </div>
+                      </div>
+                      <input type="checkbox" checked class="vel-toggle" />
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Security Set -->
+                <div
+                  id="set-security"
+                  class="settings-panel"
+                  style="display: none"
+                >
+                  <h2 style="font-size: 18px; margin-bottom: 24px">Security</h2>
+                  <button
+                    class="outline-btn text-btn"
+                    id="openPwdBtn"
+                    style="
+                      border: 1px solid var(--border-subtle);
+                      padding: 8px 16px;
+                      border-radius: 6px;
+                      margin-bottom: 24px;
+                      cursor: pointer;
+                    "
+                  >
+                    Change Password
+                  </button>
+
+                  <div style="display: flex; flex-direction: column; gap: 16px">
+                    <label
+                      class="toggle-row"
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding-bottom: 16px;
+                        border-bottom: 1px solid var(--border-subtle);
+                      "
+                    >
+                      <div>
+                        <div style="font-weight: 500">
+                          Two-Factor Authentication (2FA)
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-muted)">
+                          Protect account with extra security layer.
+                        </div>
+                      </div>
+                      <input type="checkbox" class="vel-toggle" />
+                    </label>
+                  </div>
+
+                  <h3
+                    style="
+                      font-size: 14px;
+                      margin-top: 24px;
+                      margin-bottom: 12px;
+                    "
+                  >
+                    Active Devices
+                  </h3>
+                  <div
+                    style="
+                      border: 1px solid var(--border-subtle);
+                      border-radius: 8px;
+                      padding: 12px;
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                    "
+                  >
+                    <div>
+                      <div style="font-weight: 500; font-size: 13px">
+                        Windows PC · Chrome
+                      </div>
+                      <div style="font-size: 11px; color: var(--c-amber)">
+                        Active Now
+                      </div>
+                    </div>
+                    <button
+                      class="icon-btn text-danger"
+                      style="background: none; border: none; cursor: pointer"
+                    >
+                      Log out
+                    </button>
+                  </div>
+                  
+                  <div
+                    style="
+                      border: 1px solid var(--border-subtle);
+                      border-radius: 8px;
+                      padding: 12px;
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      margin-top: 12px;
+                    "
+                  >
+                    <div>
+                      <div style="font-weight: 500; font-size: 13px">
+                        MacBook Pro · Safari
+                      </div>
+                      <div style="font-size: 11px; color: var(--text-muted)">
+                        Last active: 2 hours ago
+                      </div>
+                    </div>
+                    <button
+                      class="icon-btn text-danger"
+                      style="background: none; border: none; cursor: pointer"
+                    >
+                      Log out
+                    </button>
+                  </div>
+                  
+                  <button class="outline-btn text-danger" style="margin-top:24px; border:1px solid #ef4444; background:rgba(239, 68, 68, 0.05); cursor:pointer; padding:6px 12px; border-radius:6px; font-weight:500;">Logout of All Devices</button>
+                </div>
+
+                <!-- Preferences Set -->
+                <div
+                  id="set-preferences"
+                  class="settings-panel"
+                  style="display: none"
+                >
+                  <h2 style="font-size: 18px; margin-bottom: 24px">
+                    Preferences
+                  </h2>
+                  <div style="display: flex; flex-direction: column; gap: 16px">
+                    <label
+                      class="toggle-row"
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding-bottom: 16px;
+                        border-bottom: 1px solid var(--border-subtle);
+                      "
+                    >
+                      <div>
+                        <div style="font-weight: 500">Compact Mode</div>
+                        <div style="font-size: 12px; color: var(--text-muted)">
+                          Reduce padding for tighter data view.
+                        </div>
+                      </div>
+                      <input
+                        type="checkbox"
+                        class="vel-toggle"
+                        id="compactModeToggle"
+                      />
+                    </label>
+                    <label
+                      class="toggle-row"
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                      "
+                    >
+                      <div>
+                        <div style="font-weight: 500">Collapse Sidebar</div>
+                        <div style="font-size: 12px; color: var(--text-muted)">
+                          Minimize sidebar to icons only.
+                        </div>
+                      </div>
+                      <input
+                        type="checkbox"
+                        class="vel-toggle"
+                        id="sidebarCollapseToggle"
+                      />
+                    </label>
+
+                    <label
+                      class="toggle-row"
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding-bottom: 16px;
+                        border-bottom: 1px solid var(--border-subtle);
+                      "
+                    >
+                      <div>
+                        <div style="font-weight: 500">Default View</div>
+                        <div style="font-size: 12px; color: var(--text-muted)">
+                          Choose landing page on login.
+                        </div>
+                      </div>
+                      <select id="defaultViewSelect" class="form-input" style="width: auto">
+                         <option value="dashboard">Dashboard</option>
+                         <option value="tasks">Tasks Manager</option>
+                         <option value="finance">Finance</option>
+                         <option value="calendar">Calendar</option>
+                      </select>
+                    </label>
+
+                    <div style="margin-top: 24px; display:flex; gap:12px;">
+                        <button class="primary-btn" style="flex:1" id="exportPrefsBtn">Export Settings Data</button>
+                        <button class="outline-btn text-danger" style="flex:1; border:1px solid #ef4444; background:rgba(239, 68, 68, 0.05); cursor:pointer; padding:6px 12px; border-radius:6px; font-weight:500;" id="resetPrefsBtn">Factory Reset</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <button class="fab" title="Quick Action (New Task)" id="fabAdd">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    </button>
+
+    <!-- MODALS -->
+
+    <!-- COMMAND PALETTE (Ctrl K) -->
+    <div
+      class="modal-overlay"
+      id="cmdModal"
+      style="align-items: flex-start; padding-top: 10vh"
+    >
+      <div
+        class="modal-content"
+        style="max-width: 500px; background: var(--bg-app)"
+      >
+        <div
+          style="
+            padding: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="color: var(--c-amber)"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            id="cmdInput"
+            placeholder="Search projects, tasks, or type '/' for commands..."
+            style="
+              flex: 1;
+              background: transparent;
+              border: none;
+              color: var(--text-main);
+              font-size: 16px;
+              outline: none;
+              font-family: var(--font-sans);
+            "
+          />
+        </div>
+        <div
+          id="cmdResults"
+          style="padding: 8px; max-height: 300px; overflow-y: auto"
+        >
+          <div
+            style="
+              padding: 12px;
+              font-size: 12px;
+              color: var(--text-muted);
+              text-transform: uppercase;
+              font-weight: 600;
+            "
+          >
+            Suggestions
+          </div>
+          <div class="cmd-item" data-action="go-projects">Go to Projects</div>
+          <div class="cmd-item" data-action="new-task">Create New Task</div>
+          <div class="cmd-item" data-action="go-finance">
+            View Finance Analytics
+          </div>
+          <div class="cmd-item" data-action="go-settings">Open Settings</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD TASK Modal -->
+    <div class="modal-overlay" id="taskModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 style="font-size: 18px" id="taskModalTitle">Create Task</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 24px">
+          <form id="taskForm">
+            <input type="hidden" id="editTaskId" value="" />
+            <div class="form-group" style="margin-bottom: 16px">
+              <label
+                style="
+                  display: block;
+                  margin-bottom: 6px;
+                  font-size: 13px;
+                  font-weight: 500;
+                "
+                >Task Title</label
+              >
+              <input
+                type="text"
+                id="taskTitle"
+                placeholder="e.g. Update user module"
+                required
+                class="form-input"
+              />
+            </div>
+            <div
+              class="form-row"
+              style="display: flex; gap: 16px; margin-bottom: 24px"
+            >
+              <div class="form-group" style="flex: 1">
+                <label
+                  style="
+                    display: block;
+                    margin-bottom: 6px;
+                    font-size: 13px;
+                    font-weight: 500;
+                  "
+                  >Priority</label
+                >
+                <select id="taskPriority" class="form-input">
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1">
+                <label
+                  style="
+                    display: block;
+                    margin-bottom: 6px;
+                    font-size: 13px;
+                    font-weight: 500;
+                  "
+                  >Deadline</label
+                >
+                <input type="date" id="taskDate" required class="form-input" />
+              </div>
+            </div>
+            <button type="submit" class="primary-btn w-100 justify-center">
+              Save Task
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD PROJECT Modal -->
+    <div class="modal-overlay" id="projectModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 style="font-size: 18px">Create Project Workspace</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 24px">
+          <form id="projectForm">
+            <div class="form-group" style="margin-bottom: 16px">
+              <label
+                style="
+                  display: block;
+                  margin-bottom: 6px;
+                  font-size: 13px;
+                  font-weight: 500;
+                "
+                >Project Name</label
+              >
+              <input
+                type="text"
+                id="projTitle"
+                placeholder="e.g. Q4 Website Redesign"
+                required
+                class="form-input"
+              />
+            </div>
+            <div class="form-group" style="margin-bottom: 16px">
+              <label
+                style="
+                  display: block;
+                  margin-bottom: 6px;
+                  font-size: 13px;
+                  font-weight: 500;
+                "
+                >Status</label
+              >
+              <select id="projStatus" class="form-input">
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+            <div
+              class="form-row"
+              style="display: flex; gap: 16px; margin-bottom: 24px"
+            >
+              <div class="form-group" style="flex: 1">
+                <label
+                  style="
+                    display: block;
+                    margin-bottom: 6px;
+                    font-size: 13px;
+                    font-weight: 500;
+                  "
+                  >Priority</label
+                >
+                <select id="projPriority" class="form-input">
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1">
+                <label
+                  style="
+                    display: block;
+                    margin-bottom: 6px;
+                    font-size: 13px;
+                    font-weight: 500;
+                  "
+                  >Target Deadline</label
+                >
+                <input type="date" id="projDate" required class="form-input" />
+              </div>
+            </div>
+            <button
+              type="submit"
+              class="primary-btn w-100 justify-center"
+              style="background: var(--grad-amber-black)"
+            >
+              Create Project
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD FINANCE Modal -->
+    <div class="modal-overlay" id="txModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 style="font-size: 18px">Add Transaction</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 24px">
+          <form id="txForm">
+            <div class="form-group" style="margin-bottom: 16px">
+              <label
+                style="
+                  display: block;
+                  margin-bottom: 6px;
+                  font-size: 13px;
+                  font-weight: 500;
+                "
+                >Title</label
+              >
+              <input
+                type="text"
+                id="txTitle"
+                placeholder="e.g. Stripe Payout, AWS..."
+                required
+                class="form-input"
+              />
+            </div>
+            <div
+              class="form-row"
+              style="display: flex; gap: 16px; margin-bottom: 16px"
+            >
+              <div class="form-group" style="flex: 1">
+                <label
+                  style="
+                    display: block;
+                    margin-bottom: 6px;
+                    font-size: 13px;
+                    font-weight: 500;
+                  "
+                  >Type</label
+                >
+                <select id="txType" class="form-input">
+                  <option value="income">Income (+)</option>
+                  <option value="expense">Expense (-)</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1">
+                <label
+                  style="
+                    display: block;
+                    margin-bottom: 6px;
+                    font-size: 13px;
+                    font-weight: 500;
+                  "
+                  >Category</label
+                >
+                <select id="txCategory" class="form-input">
+                  <option value="software">Software</option>
+                  <option value="salary">Salary</option>
+                  <option value="marketing">Marketing</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 16px">
+              <label
+                style="
+                  display: block;
+                  margin-bottom: 6px;
+                  font-size: 13px;
+                  font-weight: 500;
+                "
+                >Amount ($)</label
+              >
+              <input
+                type="number"
+                step="0.01"
+                id="txAmount"
+                required
+                class="form-input"
+                placeholder="0.00"
+              />
+            </div>
+            <label
+              style="
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 24px;
+                font-size: 13px;
+                cursor: pointer;
+              "
+            >
+              <input type="checkbox" id="txRecurring" /> Mark as recurring
+              subscription
+            </label>
+            <button type="submit" class="primary-btn w-100 justify-center">
+              Record Transaction
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHANGE PASSWORD Modal -->
+    <div class="modal-overlay" id="pwdModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 style="font-size: 18px">Change Password</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 24px">
+          <form id="pwdForm">
+            <input
+              type="password"
+              placeholder="Current Password"
+              required
+              class="form-input"
+              style="margin-bottom: 12px"
+            />
+            <input
+              type="password"
+              placeholder="New Password"
+              required
+              class="form-input"
+              style="margin-bottom: 12px"
+            />
+            <input
+              type="password"
+              placeholder="Confirm New Password"
+              required
+              class="form-input"
+              style="margin-bottom: 24px"
+            />
+            <button type="submit" class="primary-btn w-100 justify-center">
+              Update Password
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
